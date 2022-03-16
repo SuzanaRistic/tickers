@@ -2,13 +2,22 @@ import { useEffect, useState } from 'react'
 import './App.css';
 import JSONDATA from './data/tickers.json'
 import Plot from 'react-plotly.js'
+import moment from 'moment';
+import DateRangePicker from 'react-bootstrap-daterangepicker';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-daterangepicker/daterangepicker.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCalendar } from '@fortawesome/free-solid-svg-icons';;
 
 function App() {
-  const [ticker, setTicker] = useState(JSONDATA.tickers)
-  const [symbolSign, setSymbolSign] = useState("A")
+  const [ticker, setTicker] = useState(JSONDATA.tickers);
+  const [symbolSign, setSymbolSign] = useState("A");
+  const [selectedDateStart, setSelectedDateStart] = useState("20/03/2018");
+  const [selectedDateEnd, setSelectedDateEnd] = useState("27/03/2018");
   const [chartDates, setChartDates] = useState([])
   const [chartValues, setChartValues] = useState([])
-  const [show, setShow] = useState(false)
+  const [showGraph, setShowGraph] = useState(false)
+  const [showList, setShowList] = useState(false)
   const chartDatesArray = [];
   const chartValuesArray = [];
 
@@ -30,15 +39,23 @@ function App() {
     if (value.length >= 1) {
       let search = await tickerSearch(ticker, value);
       setTicker(search)
+      showTickers()
     } else {
       setTicker(JSONDATA.tickers)
+      setShowList(false)
+      //REMOVE WHOLE GRAPH
+      // setShowGraph(false)
+
+      //REMOVE ONLY VALUES
+      setChartDates("")
+      setChartValues("")
+      setSymbolSign("")
       }
     }
 
   const fetchStock = () => {
     const API_KEY = "Sita4NS9zWNb1jAsf4Mn";
-    const StockCode = symbolSign
-    const API_call = `https://data.nasdaq.com/api/v3/datasets/WIKI/${StockCode}.json?collapse=annually&rows=30&order=asc&column_index=1&api_key=${API_KEY}`;
+    const API_call = `https://data.nasdaq.com/api/v3/datasets/WIKI/${symbolSign}.json?start_date=${selectedDateStart}&end_date=${selectedDateEnd}&collapse=daily&rows=30&order=desc&column_index=1&api_key=${API_KEY}`;
     fetch(API_call)
     .then(response => response.json())
     .then(data => {
@@ -52,28 +69,64 @@ function App() {
     })
   }
 
-  const showGraph = () => {
-    show ? setShow(true) : setShow(true);
+  const showChart = () => {
+    showGraph ? setShowGraph(true) : setShowGraph(true);
+    };
+
+  const showTickers = () => {
+    showList ? setShowList(true) : setShowList(true);
+    };
+
+  const handleDate = (start, end) => {
+    const startDateValue = moment(start._d).format('DD/MM/YYYY');
+    const endDateValue = moment(end._d).format('DD/MM/YYYY');
+    setSelectedDateStart(`${startDateValue}-`);
+    setSelectedDateEnd(`${endDateValue}`);
     };
 
   const handleSymbol = (e) => {
     setSymbolSign(e.target.value)
     fetchStock()
-    showGraph()
+    showChart()
+    handleDate()
   }
 
   return (
   <div className="wrapper">
-    <div className="list-div">
-      <input className="input-symbol" type="text" placeholder="Search stock symbol" onChange={handleOnChange}/>
-        {ticker.map(item => (
+  <div className="list-div">
+   <div className="header-div"><h1 className="main-header">STOCK SEARCH</h1></div>
+      <input className="input-field" type="text" placeholder=" Search stock symbol" onChange={handleOnChange}/>
+        {ticker && showList ? (ticker.map(item => (
           <div className="list-box" key={Math.random()}>
             <button className="button-symbol" value={item.symbol} onClick={handleSymbol}>{item.symbol}</button>
             <p className="p-name"> {item.securityName}</p><br/>
           </div>
-        ))}
+        ))) : null }
     </div>
-    {show ? (<div className="graph-div">
+    {showGraph ? (<div className="graph-div">
+      <div className="date-range-div">
+    <DateRangePicker
+            onCallback={handleDate}
+            initialSettings={{
+              startDate: selectedDateStart,
+              endDate: selectedDateEnd,
+              locale: {format: 'DD/MM/YYYY'},
+            }}
+            onApply={fetchStock}
+          >
+            <input
+              type="text"
+              className="date-form-box"
+            />
+          </DateRangePicker>
+          <div className='tc-calendar-icon'>
+                  <FontAwesomeIcon
+                    className='icon-calendar'
+                    icon={faCalendar}
+                    color= 'rgb(70, 131, 222)'
+                  />
+                </div>
+        </div>
       <Plot data={[{
         x: chartDates,
         y: chartValues,
