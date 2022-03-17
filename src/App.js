@@ -55,7 +55,7 @@ function App() {
 
   const fetchStock = () => {
     const API_KEY = "Sita4NS9zWNb1jAsf4Mn";
-    const API_call = `https://data.nasdaq.com/api/v3/datasets/WIKI/${symbolSign}.json?start_date=${selectedDateStart}&end_date=${selectedDateEnd}&collapse=daily&rows=30&order=desc&column_index=1&api_key=${API_KEY}`;
+    const API_call = `https://data.nasdaq.com/api/v3/datasets/WIKI/${symbolSign}.json?start_date=${selectedDateStart}&end_date=${selectedDateEnd}&collapse=daily&order=desc&column_index=1&api_key=${API_KEY}`;
     fetch(API_call)
     .then(response => response.json())
     .then(data => {
