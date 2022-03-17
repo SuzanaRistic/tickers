@@ -5,12 +5,12 @@
   background-image: linear-gradient(to bottom right, rgb(0, 91, 228), rgb(70, 131, 222), rgb(225, 231, 238));
   }
 
-  .list-div {
+    .list-div {
       display: flex;
       flex-direction: column;
-  }
+    }
 
-  .main-header {
+    .main-header {
       font-size: 40px;
       font-style: italic;
       margin: 50px 0px 0px 30px;
@@ -18,7 +18,7 @@
       color: white;  
     }
   
-  .input-field {
+    .input-field {
       width: 285px;
       height: 40px;
       font-size: 18px;
@@ -26,9 +26,9 @@
       border-radius: 4px;
       color: black !important;
       background-color: rgb(203, 211, 218);
-  }
+    }
   
-  .list-box {
+    .list-box {
       border: 1px solid;
       border-radius: 5px;
       margin: 0px 0px 20px 30px;
@@ -36,43 +36,43 @@
       height: 125px;
       background-color: rgb(245, 240, 240);
       text-align: center;
-  }
+    }
   
-  .button-symbol {
+    .button-symbol {
       margin: 20px 0px 10px 0px;
       font-size: 20px;
       border-style: none;
       background-color: rgb(70, 131, 222);
       color: rgb(245, 240, 240);
-  }
+    }
   
-  .p-name {
+    .p-name {
       margin-left: 6px;
-  }
+    }
   
-  .graph-div {
+    .graph-div {
       display: flex;
       flex-direction: column;
       margin: 130px 0px 0px 200px;
-  }
+    }
 
-  .date-range-div {
+    .date-range-div {
       display: flex;
       flex-direction: row;
       justify-content: end;
-  }
+    }
 
-  .date-form-box {
-    width: 210px;
-    height: 44px;
-    margin-bottom: 20px;
-    padding: 10px;
-  }
+    .date-form-box {
+      width: 210px;
+      height: 44px;
+      margin-bottom: 20px;
+      padding: 10px;
+    }
 
-  .icon-calendar {
+    .icon-calendar {
       padding: 10px;
       margin-left: 1px;
       margin-top: 1px;
       background-color: #e8edfa;
       font-size: 22px;
-  }
+    }

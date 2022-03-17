@@ -7,7 +7,7 @@ import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCalendar } from '@fortawesome/free-solid-svg-icons';;
+import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 
 function App() {
   const [ticker, setTicker] = useState(JSONDATA.tickers);
@@ -27,10 +27,10 @@ function App() {
   }, [symbolSign])
 
   const tickerSearch = (list, key) => {
-    const searchTerm = key.toLowerCase()
-      return list.filter(value => {
-        return value.symbol.toLowerCase().match(searchTerm) ||
-          value.securityName.toLowerCase().match(searchTerm)
+    const searchWord = key.toLowerCase()
+      return list && list.filter(value => {
+        return value.symbol.toLowerCase().match(searchWord) ||
+          value.securityName.toLowerCase().match(searchWord)
       })
     } 
 
@@ -43,10 +43,10 @@ function App() {
     } else {
       setTicker(JSONDATA.tickers)
       setShowList(false)
-      //REMOVE WHOLE GRAPH
+      //WHOLE GRAPH DISAPPEARS
       // setShowGraph(false)
 
-      //REMOVE ONLY VALUES
+      //ONLY GRAPH VALUES REMOVED
       setChartDates("")
       setChartValues("")
       setSymbolSign("")
@@ -67,6 +67,12 @@ function App() {
             setChartDates(chartDatesArray)
             setChartValues(chartValuesArray)
     })
+    const inputEndDate = moment('27/03/2018', "DD/MM/YYYY");
+    const inputChosenDate = moment(selectedDateEnd, "DD/MM/YYYY")
+    const dDiff = inputChosenDate.diff(inputEndDate)
+    if (dDiff > 0) {
+      alert("No data for dates after 27/03/2018")
+    }
   }
 
   const showChart = () => {
@@ -89,13 +95,13 @@ function App() {
     fetchStock()
     showChart()
     handleDate()
-  }
+    };
 
   return (
   <div className="wrapper">
-  <div className="list-div">
-   <div className="header-div"><h1 className="main-header">STOCK SEARCH</h1></div>
-      <input className="input-field" type="text" placeholder=" Search stock symbol" onChange={handleOnChange}/>
+    <div className="list-div">
+      <div className="header-div"><h1 className="main-header">STOCK SEARCH</h1></div>
+        <input className="input-field" type="text" placeholder=" Search stock symbol" onChange={handleOnChange}/>
         {ticker && showList ? (ticker.map(item => (
           <div className="list-box" key={Math.random()}>
             <button className="button-symbol" value={item.symbol} onClick={handleSymbol}>{item.symbol}</button>
@@ -105,28 +111,28 @@ function App() {
     </div>
     {showGraph ? (<div className="graph-div">
       <div className="date-range-div">
-    <DateRangePicker
-            onCallback={handleDate}
-            initialSettings={{
-              startDate: selectedDateStart,
-              endDate: selectedDateEnd,
-              locale: {format: 'DD/MM/YYYY'},
-            }}
-            onApply={fetchStock}
-          >
-            <input
-              type="text"
-              className="date-form-box"
-            />
-          </DateRangePicker>
-          <div className='tc-calendar-icon'>
-                  <FontAwesomeIcon
-                    className='icon-calendar'
-                    icon={faCalendar}
-                    color= 'rgb(70, 131, 222)'
-                  />
-                </div>
+        <DateRangePicker
+          onCallback={handleDate}
+          initialSettings={{
+          startDate: selectedDateStart,
+          endDate: selectedDateEnd,
+          locale: {format: 'DD/MM/YYYY'},
+          }}
+          onApply={fetchStock}
+        >
+          <input
+            type="text"
+            className="date-form-box"
+          />
+        </DateRangePicker>
+        <div className='tc-calendar-icon'>
+          <FontAwesomeIcon
+            className='icon-calendar'
+            icon={faCalendar}
+            color= 'rgb(70, 131, 222)'
+          />
         </div>
+      </div>
       <Plot data={[{
         x: chartDates,
         y: chartValues,
@@ -134,9 +140,10 @@ function App() {
         mode: 'lines+markers',
         marker: {color: 'blue'},
         }]}
-        layout={{width: 720, height: 440, title: ("Stock Market: " + symbolSign)}}/>
-        </div>
-        ) : null}
+        layout={{width: 720, height: 440, title: ("Stock Market: " + symbolSign)}}
+      />
+    </div>
+    ) : null}
   </div>
   );
 }
